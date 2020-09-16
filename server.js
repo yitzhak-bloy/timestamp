@@ -25,6 +25,40 @@ app.get("/api/hello", function (req, res) {
 });
 
 
+const getTimestamp = (req, res, next) => {
+  let dateString = req.params.date_string;
+
+  const isnum = /^\d+$/.test(dateString);
+  isnum ? dateString = Number(dateString) : null;
+
+  const date = new Date(dateString);
+  
+  date == 'Invalid Date' ? res.json({error: "Invalid Date"}) : null;
+
+  const unix = date.valueOf();
+  const humanReadable = date.toUTCString();
+
+  res.json({ 
+    unix: unix ,
+    utc: humanReadable
+  })
+}
+
+const getTimestampNew = (req, res, next) => {
+  const date = new Date();
+
+  const unix = date.valueOf();
+  const humanReadable = date.toUTCString();
+
+  res.json({ 
+    unix: unix, 
+    utc: humanReadable 
+  })
+}
+
+app.get("/api/timestamp/:date_string", getTimestamp);
+app.get("/api/timestamp/", getTimestampNew);
+
 
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function () {
